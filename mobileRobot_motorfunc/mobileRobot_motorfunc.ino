@@ -1,6 +1,5 @@
-// connect motor controller pins to Arduino digital pins
-
-/*convention: 
+// Part A: H-bridge pins to Arduino digital pins
+/*Convention: 
  Only Arduino Uno pins 3,5,6,9,10,11 can be used for PWM
  pins 5,6 may experience higher duty cycle than expected
  due to interactions involving delay() & millis()
@@ -11,29 +10,27 @@
  Heat sink of H-bridges face outwards of vehicle (platform)
  */
 
-//right H-bridge
-int pwmRIGHT = 9; //enA and enB on right H-bridge
+
+// Part B: wheel encoder for dfrobot mobile platform connection for Arduino Uno
+/*left wheel encoder -> digital pin 2, right wheel encoder -> digital pin 4 */
+
+#define LEFT 0
+#define RIGHT 1
+
+long encoder[2]={0,0};
+int prevSpeed[2]={0,0};
+
+//right H-bridge to Arduino Uno connection
+int pwmRight = 9; //enA and enB on right H-bridge
 int dirRight_pve = 5; //in1 and in3 on right H-bridge
 int dirRight_nve = 6; //in2 and in4 on right H-bridge
 
-//left H-bridge
-int pwmLEFT = 10; //enA and enB on left H-bridge
+//left H-bridge to Arduino Uno connection
+int pwmLeft = 10; //enA and enB on left H-bridge
 int dirLeft_pve = 7; //in1 and in3 on left H-bridge
 int dirLeft_nve = 8; //in2 and in4 on left H-bridge
+=======
 
-
-void setup() {
-  // set all the motor control pins to outputs
-  pinMode(pwmRIGHT,OUTPUT);
-  pinMode(dirRight_pve,OUTPUT);
-  pinMode(dirRight_nve,OUTPUT);
-
-  pinMode(pwmLEFT,OUTPUT);
-  pinMode(dirLeft_pve,OUTPUT);
-  pinMode(dirLeft_nve,OUTPUT);
-
-  //Serial.begin(9600);
-}
 
 void goStraight(int pwm, int ms, int dir){
   // input parameter ms is time in ms
@@ -55,8 +52,10 @@ void goStraight(int pwm, int ms, int dir){
   }
 
   // set speed
-  analogWrite(pwmRIGHT,constrain(pwm,0,255));
-  analogWrite(pwmLEFT,constrain(pwm,0,255));
+
+  analogWrite(pwmRight,constrain(pwm,0,255));
+  analogWrite(pwmLeft,constrain(pwm,0,255));
+
   // set duration
   delay(ms); // to be changed to millis() later
   // turn off motors
@@ -75,8 +74,10 @@ void demoOne(){
   digitalWrite(dirLeft_pve,LOW);
   digitalWrite(dirLeft_nve,HIGH);
   // set speed to 200 out of possible range of 0-255
-  analogWrite(pwmRIGHT,200);
-  analogWrite(pwmLEFT,200);
+
+  analogWrite(pwmRight,200);
+  analogWrite(pwmLeft,200);
+
 
   delay(2000);
 
@@ -136,8 +137,36 @@ void demoTwo(){
 }
 */
 
+
+void encodeLeftWheel(){
+  encoder[LEFT]++; // count the left wheel encoder interrupts
+}
+
+void encodeRightWheel(){
+  encoder[RIGHT]++; // count the right wheel encoder interrupts
+}
+
+void setup() {
+  // Set motor control pin modes
+  pinMode(pwmRight,OUTPUT);
+  pinMode(dirRight_pve,OUTPUT);
+  pinMode(dirRight_nve,OUTPUT);
+
+  pinMode(pwmLeft,OUTPUT);
+  pinMode(dirLeft_pve,OUTPUT);
+  pinMode(dirLeft_nve,OUTPUT);
+
+  Serial.begin(9600); // init serial port to print data, in bits/s
+
+  // Set encoder pin modes
+  // For Arduino Uno, interrupt number 0 = pin 2, interrupt number 1 = pin 3
+  attachInterrupt(LEFT, encodeLeftWheel,CHANGE); // init interrupt mode for digital pin 2
+  attachInterrupt(RIGHT, encodeRightWheel, CHANGE); // init interrupt mode for digital pin 3
+}
+
 void loop(){
-  // put your main code here, to run repeatedly:
+  // motor work
+
   demoOne();
   //delay(2000);
   //demoTwo();
@@ -145,4 +174,21 @@ void loop(){
   //delay(1000);
   //goStraight(180,3000,0); // go backwards
   delay(1000);
+
+  // encoder work
+  static unsigned long timer =0; // print manager timer
+
+  if(millis() - timer > 500){
+    Serial.print("Coder value: ");
+    Serial.print(encoder[LEFT]);
+    Serial.print("[Left Wheel] ");
+    Serial.print(encoder[RIGHT]);
+    Serial.println("[Right Wheel]");
+    Serial.println(" ");
+
+    prevSpeed[LEFT] = encoder[LEFT]; // record the latest speed value
+    prevSpeed[RIGHT] = encoder[RIGHT];
+    encoder[LEFT]=0; // clear the data buffer
+    encoder[RIGHT]=0;
+    timer=millis();
 }
