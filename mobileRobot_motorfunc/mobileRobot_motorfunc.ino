@@ -5,38 +5,32 @@
  pins 5,6 may experience higher duty cycle than expected
  due to interactions involving delay() & millis()
 
- PWM pins: 9 for  RightPWM, 10 for LeftPWM
+ PWM pins: 9 for  Right PWM, 10 for Left PWM
  Direction pins: 5,6,7,8, in order +-+-, RRLL
  H-bridge (right, flip +- for left side) in1, in3, out1, out3 (odd num) as +ve; in2, in4, out2, out4 (even num) as -ve 
  Heat sink of H-bridges face outwards of vehicle (platform)
  */
 
 //right H-bridge
-int pwmFR = 9; //enA on right H-bridge
+int pwmRIGHT = 9; //enA and enB on right H-bridge
 int dirRight_pve = 5; //in1 and in3 on right H-bridge
 int dirRight_nve = 6; //in2 and in4 on right H-bridge
-int pwmRR = 9; //enB on right H-bridge
 
 //left H-bridge
-int pwmRL = 10; //enA on left H-bridge
+int pwmLEFT = 10; //enA and enB on left H-bridge
 int dirLeft_pve = 7; //in1 and in3 on left H-bridge
 int dirLeft_nve = 8; //in2 and in4 on left H-bridge
-int pwmFL = 10; //enB on left H-bridge
 
 
 void setup() {
   // set all the motor control pins to outputs
-  pinMode(pwmFR,OUTPUT);
-  // pinMode(pwmRR,OUTPUT);
+  pinMode(pwmRIGHT,OUTPUT);
   pinMode(dirRight_pve,OUTPUT);
   pinMode(dirRight_nve,OUTPUT);
 
-
-  pinMode(pwmFL,OUTPUT);
-  // pinMode(pwmRL,OUTPUT);
+  pinMode(pwmLEFT,OUTPUT);
   pinMode(dirLeft_pve,OUTPUT);
   pinMode(dirLeft_nve,OUTPUT);
-
 
   //Serial.begin(9600);
 }
@@ -61,10 +55,8 @@ void goStraight(int pwm, int ms, int dir){
   }
 
   // set speed
-  analogWrite(pwmFR,constrain(pwm,0,255));
-  //analogWrite(pwmRR,constrain(pwm,0,255));
-  //analogWrite(pwmRL,constrain(pwm,0,255));
-  analogWrite(pwmFL,constrain(pwm,0,255));
+  analogWrite(pwmRIGHT,constrain(pwm,0,255));
+  analogWrite(pwmLEFT,constrain(pwm,0,255));
   // set duration
   delay(ms); // to be changed to millis() later
   // turn off motors
@@ -83,10 +75,8 @@ void demoOne(){
   digitalWrite(dirLeft_pve,LOW);
   digitalWrite(dirLeft_nve,HIGH);
   // set speed to 200 out of possible range of 0-255
-  analogWrite(pwmFR,200);
-  //analogWrite(pwmRR,200);
-  //analogWrite(pwmRL,200);
-  analogWrite(pwmFL,200);
+  analogWrite(pwmRIGHT,200);
+  analogWrite(pwmLEFT,200);
 
   delay(2000);
 
@@ -105,6 +95,7 @@ void demoOne(){
   digitalWrite(dirLeft_nve,LOW);
 }
 
+/*
 void demoTwo(){
   // this function will run the motors across range of possible speeds
   // choose motor direction
@@ -143,14 +134,15 @@ void demoTwo(){
   digitalWrite(dirLeft_pve,LOW);
   digitalWrite(dirLeft_nve,LOW);
 }
+*/
 
 void loop(){
   // put your main code here, to run repeatedly:
-  //demoOne();
+  demoOne();
   //delay(2000);
   //demoTwo();
-  goStraight(180,3000,1); // go forward
-  delay(1000);
-  goStraight(180,3000,0); // go backwards
+  //goStraight(180,3000,1); // go forward
+  //delay(1000);
+  //goStraight(180,3000,0); // go backwards
   delay(1000);
 }
