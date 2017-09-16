@@ -10,6 +10,7 @@
  Heat sink of H-bridges face outwards of vehicle (platform)
  */
 
+
 // Part B: wheel encoder for dfrobot mobile platform connection for Arduino Uno
 /*left wheel encoder -> digital pin 2, right wheel encoder -> digital pin 4 */
 
@@ -28,6 +29,8 @@ int dirRight_nve = 6; //in2 and in4 on right H-bridge
 int pwmLeft = 10; //enA and enB on left H-bridge
 int dirLeft_pve = 7; //in1 and in3 on left H-bridge
 int dirLeft_nve = 8; //in2 and in4 on left H-bridge
+=======
+
 
 void goStraight(int pwm, int ms, int dir){
   // input parameter ms is time in ms
@@ -49,8 +52,10 @@ void goStraight(int pwm, int ms, int dir){
   }
 
   // set speed
+
   analogWrite(pwmRight,constrain(pwm,0,255));
   analogWrite(pwmLeft,constrain(pwm,0,255));
+
   // set duration
   delay(ms); // to be changed to millis() later
   // turn off motors
@@ -69,8 +74,10 @@ void demoOne(){
   digitalWrite(dirLeft_pve,LOW);
   digitalWrite(dirLeft_nve,HIGH);
   // set speed to 200 out of possible range of 0-255
+
   analogWrite(pwmRight,200);
   analogWrite(pwmLeft,200);
+
 
   delay(2000);
 
@@ -130,6 +137,7 @@ void demoTwo(){
 }
 */
 
+
 void encodeLeftWheel(){
   encoder[LEFT]++; // count the left wheel encoder interrupts
 }
@@ -158,6 +166,7 @@ void setup() {
 
 void loop(){
   // motor work
+
   demoOne();
   //delay(2000);
   //demoTwo();
