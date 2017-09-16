@@ -12,13 +12,30 @@
 
 
 // Part B: wheel encoder for dfrobot mobile platform connection for Arduino Uno
-/*left wheel encoder -> digital pin 2, right wheel encoder -> digital pin 4 */
+/*left wheel encoder -> digital pin 2, right wheel encoder -> digital pin 3 */
+
+
+//////////////////////////
+//////////////////////////
+//////////////////////////
+//////////////////////////
+/*
+ELECTROMAGNETIC AND ELECTRICAL INTEFERENCE IS A BIG FUCKING PROBLEM.
+VERIFIED EXISTENCE OF EM INTERFERENCE FROM DC MOTOR. 
+EM INTEFERENCE DISTORTS THE WIRE SIGNAL GOING INTO PIN 3, THEREBY GIVING ERRATIC INTERRUPTS  
+
+*/
+//////////////////////////
+//////////////////////////
+//////////////////////////
+//////////////////////////
+
 
 #define LEFT 0
 #define RIGHT 1
 
-long encoder[2]={0,0};
-int prevSpeed[2]={0,0};
+volatile long encoder[2]={0,0};
+long prevSpeed[2]={0,0};
 
 //right H-bridge to Arduino Uno connection
 int pwmRight = 9; //enA and enB on right H-bridge
@@ -29,7 +46,7 @@ int dirRight_nve = 6; //in2 and in4 on right H-bridge
 int pwmLeft = 10; //enA and enB on left H-bridge
 int dirLeft_pve = 7; //in1 and in3 on left H-bridge
 int dirLeft_nve = 8; //in2 and in4 on left H-bridge
-=======
+
 
 
 void goStraight(int pwm, int ms, int dir){
@@ -78,7 +95,7 @@ void demoOne(){
   analogWrite(pwmRight,200);
   analogWrite(pwmLeft,200);
 
-
+  
   delay(2000);
 
   // change motor directions
@@ -94,7 +111,9 @@ void demoOne(){
   digitalWrite(dirRight_nve,LOW);
   digitalWrite(dirLeft_pve,LOW);
   digitalWrite(dirLeft_nve,LOW);
+  
 }
+
 
 /*
 void demoTwo(){
@@ -138,52 +157,58 @@ void demoTwo(){
 */
 
 
-void encodeLeftWheel(){
-  encoder[LEFT]++; // count the left wheel encoder interrupts
-}
 
-void encodeRightWheel(){
-  encoder[RIGHT]++; // count the right wheel encoder interrupts
-}
 
 void setup() {
   // Set motor control pin modes
   pinMode(pwmRight,OUTPUT);
   pinMode(dirRight_pve,OUTPUT);
   pinMode(dirRight_nve,OUTPUT);
-
   pinMode(pwmLeft,OUTPUT);
   pinMode(dirLeft_pve,OUTPUT);
   pinMode(dirLeft_nve,OUTPUT);
 
+
   Serial.begin(9600); // init serial port to print data, in bits/s
+
+ 
+  // turn on left motors
+  digitalWrite(dirLeft_pve,LOW);
+  digitalWrite(dirLeft_nve,HIGH);
+  // set speed to 200 out of possible range of 0-255
+  analogWrite(pwmLeft,90);
+  
 
   // Set encoder pin modes
   // For Arduino Uno, interrupt number 0 = pin 2, interrupt number 1 = pin 3
+  pinMode(2, INPUT_PULLUP); // possibly needed
+  pinMode(3, INPUT_PULLUP);  // possibly needed. check
   attachInterrupt(LEFT, encodeLeftWheel,CHANGE); // init interrupt mode for digital pin 2
   attachInterrupt(RIGHT, encodeRightWheel, CHANGE); // init interrupt mode for digital pin 3
+
 }
 
 void loop(){
   // motor work
 
-  demoOne();
+  //demoOne();
   //delay(2000);
   //demoTwo();
   //goStraight(180,3000,1); // go forward
   //delay(1000);
   //goStraight(180,3000,0); // go backwards
-  delay(1000);
+  
 
   // encoder work
-  static unsigned long timer =0; // print manager timer
+  static unsigned long timer = 0; // print timer
 
-  if(millis() - timer > 500){
-    Serial.print("Coder value: ");
+  if(millis() - timer > 200){
+    detachInterrupt(LEFT); // temporarily disable interrupts
+    detachInterrupt(RIGHT);
+    Serial.print("[Left Wheel]= ");
     Serial.print(encoder[LEFT]);
-    Serial.print("[Left Wheel] ");
-    Serial.print(encoder[RIGHT]);
-    Serial.println("[Right Wheel]");
+    Serial.print("    [Right Wheel]= ");
+    Serial.println(encoder[RIGHT]);
     Serial.println(" ");
 
     prevSpeed[LEFT] = encoder[LEFT]; // record the latest speed value
@@ -191,4 +216,20 @@ void loop(){
     encoder[LEFT]=0; // clear the data buffer
     encoder[RIGHT]=0;
     timer=millis();
+
+    attachInterrupt(LEFT, encodeLeftWheel,CHANGE); // reinit interrupt mode for digital pin 2
+    attachInterrupt(RIGHT, encodeRightWheel, CHANGE); // reinit interrupt mode for digital pin 3
+  }
 }
+
+void encodeLeftWheel(){
+  encoder[LEFT]++; // count the left wheel encoder interrupts
+
+}
+
+void encodeRightWheel(){
+  encoder[RIGHT]++; // count the right wheel encoder interrupts
+}
+
+
+
