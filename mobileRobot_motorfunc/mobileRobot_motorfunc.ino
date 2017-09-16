@@ -5,14 +5,14 @@
  pins 5,6 may experience higher duty cycle than expected
  due to interactions involving delay() & millis()
 
- PWM pins: 3,9,10,11 in CW order starting from FR
+ PWM pins: 9 for  RightPWM, 10 for LeftPWM
  Direction pins: 5,6,7,8, in order +-+-, RRLL
  H-bridge (right, flip +- for left side) in1, in3, out1, out3 (odd num) as +ve; in2, in4, out2, out4 (even num) as -ve 
  Heat sink of H-bridges face outwards of vehicle (platform)
  */
 
 //right H-bridge
-int pwmFR = 3; //enA on right H-bridge
+int pwmFR = 9; //enA on right H-bridge
 int dirRight_pve = 5; //in1 and in3 on right H-bridge
 int dirRight_nve = 6; //in2 and in4 on right H-bridge
 int pwmRR = 9; //enB on right H-bridge
@@ -21,20 +21,22 @@ int pwmRR = 9; //enB on right H-bridge
 int pwmRL = 10; //enA on left H-bridge
 int dirLeft_pve = 7; //in1 and in3 on left H-bridge
 int dirLeft_nve = 8; //in2 and in4 on left H-bridge
-int pwmFL = 11; //enB on left H-bridge
+int pwmFL = 10; //enB on left H-bridge
 
 
 void setup() {
   // set all the motor control pins to outputs
   pinMode(pwmFR,OUTPUT);
+  // pinMode(pwmRR,OUTPUT);
   pinMode(dirRight_pve,OUTPUT);
   pinMode(dirRight_nve,OUTPUT);
-  pinMode(pwmRR,OUTPUT);
-  
-  pinMode(pwmRL,OUTPUT);
+
+
+  pinMode(pwmFL,OUTPUT);
+  // pinMode(pwmRL,OUTPUT);
   pinMode(dirLeft_pve,OUTPUT);
   pinMode(dirLeft_nve,OUTPUT);
-  pinMode(pwmFL,OUTPUT);
+
 
   //Serial.begin(9600);
 }
@@ -60,8 +62,8 @@ void goStraight(int pwm, int ms, int dir){
 
   // set speed
   analogWrite(pwmFR,constrain(pwm,0,255));
-  analogWrite(pwmRR,constrain(pwm,0,255));
-  analogWrite(pwmRL,constrain(pwm,0,255));
+  //analogWrite(pwmRR,constrain(pwm,0,255));
+  //analogWrite(pwmRL,constrain(pwm,0,255));
   analogWrite(pwmFL,constrain(pwm,0,255));
   // set duration
   delay(ms); // to be changed to millis() later
@@ -82,8 +84,8 @@ void demoOne(){
   digitalWrite(dirLeft_nve,HIGH);
   // set speed to 200 out of possible range of 0-255
   analogWrite(pwmFR,200);
-  analogWrite(pwmRR,200);
-  analogWrite(pwmRL,200);
+  //analogWrite(pwmRR,200);
+  //analogWrite(pwmRL,200);
   analogWrite(pwmFL,200);
 
   delay(2000);
@@ -114,8 +116,8 @@ void demoTwo(){
   // accelerate from zero to max PWM speed
   for(int i=0;i<256;i+=1){
     analogWrite(pwmFR,i);
-    analogWrite(pwmRR,i);
-    analogWrite(pwmRL,i);
+    //analogWrite(pwmRR,i);
+    //analogWrite(pwmRL,i);
     analogWrite(pwmFL,i);
     delay(20);
 
@@ -126,8 +128,8 @@ void demoTwo(){
   // decelerate from max speed to zero
   for(int i=255;i>=0;i-=1){
     analogWrite(pwmFR,i);
-    analogWrite(pwmRR,i);
-    analogWrite(pwmRL,i);
+    //analogWrite(pwmRR,i);
+    //analogWrite(pwmRL,i);
     analogWrite(pwmFL,i);
     delay(20);
 
