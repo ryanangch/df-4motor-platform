@@ -8,3 +8,6 @@ sep 16, 2017
  - need to find some way to shield the EM inteference (aluminium foil, twisted pair, etc.). Or have DC motor as far as possible from other circuitry 
  - put a disc capacitor 10nf across the motor as close to the motor as possible to reduce RF noise off of the brushes
  - need to buy capacitors to reduce electrical noise
+
+How to Set-Up OpenCV in Microsoft Visual Studio
+https://docs.google.com/document/d/1GJKjPO__LdRvwhadMwhDU-g-vjULhmtshCOMC_yiCeM/edit?usp=sharing
