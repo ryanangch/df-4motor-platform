@@ -1,0 +1,44 @@
+//Record all work done, alone or collectively. Include all issues faced and planned/implemented solutions
+
+//[(ID)] states that work is done individually by the stated contributor, work done collectively if not stated
+//[NEXT] mentions the work to be done during next meeting
+//[WIP] means work in progress
+
+
+2017.09.18 Monday
+
+- [ryanangch] Purchased roll of wire, soldering tools, larger breadboard, capacitors (10nF,100 nF,470nF)
+- [chc] Demo EM interference
+- Tested connecting 10nF capacitors parallel to motor connection with H-bridge, less signal distortion on same side, distortion still observed on opposite side
+- Suggested coding to extract encoder (and any future implementation) data to .csv for ease of documentation
+- [WIP] Purchase Lithium-polymer battery packs
+- [NEXT] Rework entire electronic assembly
+
+
+2017.09.16 Saturday
+
+- [chc] Decided to purchase Lithium-polymer battery packs instead of using 5xAA batteries
+- [chc] Detected electromagnetic interference by motor brushes to encoder wire (encoder signals distorted), decided to try connecting capacitors or using twisted pairs or aluminium foils
+
+
+2017.09.14 Thursday
+
+- Configured openCV with Microsoft Visual Studio
+
+
+2017.09.09 Saturday
+
+- Purchased 4 jumper wire bundles (of 3) F/M to connect H-bridge to Arduino Uno
+- [ryanangch] Purchased wire stripper, velcro, cloth (to insulate metal platform from electronic assembly)
+- 
+
+
+
+2017.09.08 Friday
+
+- First hardware assembly (mobile platform, motors, H-bridges, Arduino Uno, breadboard)
+- Left and right motors share direction signals, pulse width modulation (PWM) signals individual for each motor
+- PWM did not work until value exceeds 127, reason being using Arduino Uno pins that are unable to output PWM
+- Switched pins to 3,9,10,11 for PWM
+- Lacking F/M jumper wires, complete wire connections available for only 3 motors
+- Shakedown of all motors, each one individually, FR, RR, RL collectively
