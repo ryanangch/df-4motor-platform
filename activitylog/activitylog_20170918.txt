@@ -5,8 +5,14 @@
 //[WIP] means work in progress
 
 
-2017.09.18 Monday
+2017.09.22 Friday
+- Disassembled platform for wiring cleanup.
+- Wiring and soldering put on hold because of unusable soldering iron.
+- [NEXT] Fix soldering iron at seapark electronics shop. Missing electrical plug connector.
+- [NEXT] Find a way to measure the effect of the EM inteference from the DC motor so that we can qualitatively measure the effectiveness of a soldered-on capacitor.
 
+
+2017.09.18 Monday
 - [ryanangch] Purchased roll of wire, soldering tools, larger breadboard, capacitors (10nF,100 nF,470nF)
 - [chc] Demo EM interference
 - Tested connecting 10nF capacitors parallel to motor connection with H-bridge, less signal distortion on same side, distortion still observed on opposite side
@@ -16,26 +22,20 @@
 
 
 2017.09.16 Saturday
-
 - [chc] Decided to purchase Lithium-polymer battery packs instead of using 5xAA batteries
 - [chc] Detected electromagnetic interference by motor brushes to encoder wire (encoder signals distorted), decided to try connecting capacitors or using twisted pairs or aluminium foils
 
 
 2017.09.14 Thursday
-
 - Configured openCV with Microsoft Visual Studio
 
 
 2017.09.09 Saturday
-
 - Purchased 4 jumper wire bundles (of 3) F/M to connect H-bridge to Arduino Uno
-- [ryanangch] Purchased wire stripper, velcro, cloth (to insulate metal platform from electronic assembly)
-- 
-
+- [ryanangch] Purchased wire stripper, velcro, cloth (to insulate metal platform from electronic assembly
 
 
 2017.09.08 Friday
-
 - First hardware assembly (mobile platform, motors, H-bridges, Arduino Uno, breadboard)
 - Left and right motors share direction signals, pulse width modulation (PWM) signals individual for each motor
 - PWM did not work until value exceeds 127, reason being using Arduino Uno pins that are unable to output PWM
